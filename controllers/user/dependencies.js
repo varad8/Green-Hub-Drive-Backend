@@ -29,7 +29,23 @@ const hashPassword = async (password) => {
   return await bcrypt.hash(password, saltRounds);
 };
 
+//checking that ev admin exist or not
+const checkEvAdminExistence = (userid) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM ev_registration WHERE userid = ?";
+    pool.query(query, [userid], (error, results) => {
+      if (error) {
+        console.error("Error checking EV admin existence:", error);
+        reject(error);
+      } else {
+        resolve(results.length > 0);
+      }
+    });
+  });
+};
+
 module.exports = {
+  moment,
   express,
   bodyParser,
   bcrypt,
@@ -38,6 +54,7 @@ module.exports = {
   moment,
   path,
   multer,
+  checkEvAdminExistence,
   hashPassword,
   fs,
   checkUserExistence,

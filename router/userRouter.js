@@ -9,9 +9,14 @@ const {
   getProfileImage,
   deleteProfileImage,
   getUserProfileByUserId,
+  getAllEvStations,
+  getEvStationByUserid,
 } = require("../controllers/user/auth");
 
-const { checkSlotAvailablity } = require("../controllers/user/booking");
+const {
+  checkSlotAvailablity,
+  checkSlotAvailabilityForStation,
+} = require("../controllers/user/booking");
 const {
   getAllNotification,
   getNotificationByUserId,
@@ -42,6 +47,9 @@ router.route("/:userid").get(getUserProfileByUserId);
 /** ------------------------ [ Booking slot Availability checking] ------------------------------*/
 
 router.route("/checkAvailability").post(checkSlotAvailablity);
+router
+  .route("/checkAvailability/:userid")
+  .post(checkSlotAvailabilityForStation);
 
 /** ------------------------ [Image Uploading using Multer and fs ] ------------------------------*/
 //Upload profile image
@@ -61,5 +69,13 @@ router.route("/notifications/:userid").get(getAllNotification);
 router
   .route("/notifications/:userid/:notificationId")
   .get(getNotificationByUserId);
+
+/** ------------------------ [ Get  EvStations ] ------------------------------*/
+
+//Get All Evstations
+router.route("/evstations/all").get(getAllEvStations);
+
+//Get EvStation by userid
+router.route("/evstation/:userid").get(getEvStationByUserid);
 
 module.exports = router;
