@@ -9,6 +9,7 @@ const {
   checkUserExistence,
   checkEvAdminExistence,
   multer,
+  moment,
   fs,
 } = require("./dependencies");
 
@@ -36,7 +37,7 @@ const upload = multer({ storage: storage }).single("file");
 
 //Owner Registration
 const adminRegister = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, confirmpassword } = req.body;
 
   // Check if email or password is empty
   if (!email) {
@@ -46,13 +47,23 @@ const adminRegister = async (req, res) => {
     return res.status(400).json({ error: "Password required" });
   }
 
+  if (!confirmpassword) {
+    return res.status(400).json({ error: "Confirm Password required" });
+  }
+
   // Password validation
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$/;
-  if (!passwordRegex.test(password)) {
+  if (!passwordRegex.test(password) || !passwordRegex.test(confirmpassword)) {
     return res.status(400).json({
       error:
         "Password must be at least 6 characters long and contain at least one uppercase letter, one number, and one special symbol",
+    });
+  }
+
+  if (password !== confirmpassword) {
+    return res.status(400).json({
+      error: "Password and Confirm Password does not march",
     });
   }
 
@@ -142,6 +153,8 @@ const adminRegister = async (req, res) => {
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log("Im Call");
+
   // Check if email or password is empty
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required" });
@@ -197,11 +210,26 @@ const adminLogin = async (req, res) => {
 //Owner Update Profile
 const updateAdminProfile = async (req, res) => {
   const { userid } = req.params;
-  const { firstname, lastname, mobile, address } = req.body;
+  const { firstname, lastname, mobile, address, dob } = req.body;
+
+  console.log("Im Call");
 
   // Validate request body
-  if (!firstname || !lastname || !mobile || !address) {
+  if (!firstname || !lastname || !mobile || !address || !dob) {
     return res.status(400).json({ error: "All fields are required" });
+  }
+
+  // Validate mobile number format
+  const mobileRegex = /^\d{10}$/;
+  if (!mobileRegex.test(mobile)) {
+    return res.status(400).json({ error: "Mobile number must be 10 digits" });
+  }
+
+  // Validate date of birth format (yyyy-mm-dd)
+  if (!moment(dob, "YYYY-MM-DD", true).isValid()) {
+    return res
+      .status(400)
+      .json({ error: "Invalid date of birth format. Please use yyyy-mm-dd" });
   }
 
   try {
@@ -240,6 +268,7 @@ const updateAdminProfile = async (req, res) => {
         firstname,
         lastname,
         mobile,
+        dob,
       };
       const profileJson = JSON.stringify(profile);
 
@@ -321,41 +350,79 @@ const updateAdminProfile = async (req, res) => {
 
 // Get Owner Profile by userid
 const getAdminProfile = async (req, res) => {
-  const { userid } = req.params;
+  const userid = req.params.userid;
 
-  try {
-    // Construct the SELECT query
-    const selectQuery = `
-      SELECT * FROM ev_profile 
-      WHERE userid = ?
-    `;
+  // Get a connection from the pool
+  pool.getConnection((err, connection) => {
+    if (err) {
+      // If an error occurs, send an error response
+      return res
+        .status(500)
+        .json({ error: "Error connecting to the database" });
+    }
 
-    // Execute the SELECT query
-    pool.query(selectQuery, [userid], (error, results, fields) => {
-      if (error) {
-        console.error("Error retrieving profile:", error);
-        return res.status(500).json({ error: "Internal server error" });
+    // Perform the query to retrieve EV station by userid
+    connection.query(
+      "SELECT * FROM ev_profile WHERE userid = ?",
+      [userid],
+      (error, results) => {
+        // Release the connection back to the pool
+        connection.release();
+
+        if (error) {
+          // If an error occurs, send an error response
+          return res.status(500).json({ error: "Error querying the database" });
+        }
+
+        // Check if station with the given userid exists
+        if (results.length === 0) {
+          return res.status(404).json({ error: "EV station not found" });
+        }
+
+        // Parse the JSON strings into JSON objects
+        const evStation = results.map((station) => {
+          // Parse evTimings
+          const evTimings = JSON.parse(station.evTimings);
+          for (const day in evTimings) {
+            // Check if openingTime and closingTime are strings
+            if (typeof evTimings[day].openingTime === "string") {
+              // Convert string to object
+              evTimings[day].openingTime = parseTimeString(
+                evTimings[day].openingTime
+              );
+            }
+            if (typeof evTimings[day].closingTime === "string") {
+              // Convert string to object
+              evTimings[day].closingTime = parseTimeString(
+                evTimings[day].closingTime
+              );
+            }
+          }
+
+          return {
+            evid: station.evid,
+            accountType: station.accountType,
+            evTimings: evTimings,
+            title: station.title,
+            address: station.address,
+            coordinates: JSON.parse(station.coordinates),
+            location: JSON.parse(station.location),
+            updatedAt: station.updatedAt,
+            profile: JSON.parse(station.profile),
+            accountStatus: JSON.parse(station.accountStatus),
+            imageUrl: station.imageUrl,
+            description: station.description,
+            id: station.id,
+            rate: station.rate,
+            userid: station.userid,
+          };
+        });
+
+        // Send the response with the retrieved and formatted EV station
+        res.status(200).json(evStation);
       }
-
-      if (results.length === 0) {
-        return res.status(404).json({ error: "Profile not found" });
-      }
-
-      const profile = results[0]; // Assuming there's only one profile with the given userid
-
-      // Parse JSON fields
-      profile.evTimings = JSON.parse(profile.evTimings);
-      profile.profile = JSON.parse(profile.profile);
-      profile.location = JSON.parse(profile.location);
-      profile.coordinates = JSON.parse(profile.coordinates);
-      profile.accountStatus = JSON.parse(profile.accountStatus);
-
-      res.status(200).json(profile);
-    });
-  } catch (error) {
-    console.error("Error retrieving profile:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+    );
+  });
 };
 
 // Update owner profilepic-->  i.e. profile.profilepic json
@@ -690,7 +757,53 @@ const deleteImageUrl = async (req, res) => {
   });
 };
 
+//Get Ev Details [rate,title,description,state,city,coordinates,evTimings]
+const updateStationDetails = async (req, res) => {
+  const userid = req.params.userid;
+  const { rate, title, description, coordinates, evTimings, location } =
+    req.body;
+
+  if (
+    !rate ||
+    !title ||
+    !description ||
+    !coordinates ||
+    !evTimings ||
+    !location ||
+    !userid
+  ) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  try {
+    // Execute the SQL update query
+    await pool.query(
+      "UPDATE ev_profile SET rate = ?, title = ?, description = ?, coordinates = ?, evTimings = ? WHERE userid = ?",
+      [
+        rate,
+        title,
+        description,
+        JSON.stringify(coordinates),
+        JSON.stringify(evTimings),
+        userid,
+      ]
+    );
+
+    res.status(200).json({ message: "Station details updated successfully" });
+  } catch (error) {
+    console.error("Error updating station details:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function to parse time strings into objects
+function parseTimeString(timeString) {
+  const [hours, minutes] = timeString.split(":").map(Number);
+  return { hours, minutes };
+}
+
 module.exports = {
+  updateStationDetails,
   adminRegister,
   adminLogin,
   updateAdminProfile,

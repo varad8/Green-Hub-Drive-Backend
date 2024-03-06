@@ -7,6 +7,8 @@ const moment = require("moment");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
+const { nodemailer } = require("../user/dependencies");
+const { EMAIL_USER, EMAIL_PASSWORD, WEB_URL, YOUR_EMAIL } = process.env;
 
 // Function to hash password
 const hashPassword = async (password) => {
@@ -74,6 +76,15 @@ const generateUniqueEvid = async () => {
   }
 };
 
+// Configure nodemailer with your email transport settings
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASSWORD,
+  },
+});
+
 module.exports = {
   express,
   bodyParser,
@@ -81,6 +92,8 @@ module.exports = {
   uuidv4,
   pool,
   moment,
+  nodemailer,
+  transporter,
   path,
   multer,
   hashPassword,

@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const {
+  updateStationDetails,
   adminRegister,
   adminLogin,
   updateAdminProfile,
@@ -15,12 +16,28 @@ const {
 } = require("../controllers/admin/auth");
 
 const {
+  FormRestPassword,
+  RestPassword,
+  forgotPassword,
+} = require("../controllers/admin/passwordReset");
+
+const {
+  getBookingDataUsingStationId,
+  updateBookingStatusByOrderId,
+  getBookingPaymentDataByUserId,
+  getChartOfBookingDataByUserId,
+  getBookingCountsByUserId,
+} = require("../controllers/admin/booking");
+
+const {
   sendNotificationUser,
   getAllNotificationByStationUserId,
   deleteNotificationByNotificationId,
   updateNotificationByNotificationId,
   getNotificationByNotificationId,
 } = require("../controllers/admin/notification");
+
+const { getAllRatingsByStationId } = require("../controllers/admin/rating");
 
 const router = express.Router();
 
@@ -41,12 +58,21 @@ router.route("/register").post(adminRegister);
 router.route("/login").post(adminLogin);
 
 // Owner update profile --> Ev User
-router.route("/:userid").post(updateAdminProfile);
+router.route("/:userid").put(updateAdminProfile);
 
 //Owner get profile --> Ev user
 router.route("/:userid").get(getAdminProfile);
 
-/** ------------------------ [Image Uploading using Multer and fs ] ------------------------------*/
+//Update Ev Details
+router.route("/evdetails/:userid").put(updateStationDetails);
+
+//Reset Password
+router.route("/forgot/reset-password").get(FormRestPassword);
+router.route("/forgot/reset-password").post(RestPassword);
+//Forgot Password
+router.route("/forgot-password").post(forgotPassword);
+
+/** ------------------------ [Image Uploading using Multer and fs] ------------------------------*/
 //update profilepic of owener
 router.route("/upload/:userid").post(updateAdminProfilePic);
 
@@ -89,4 +115,18 @@ router
   .route("/notifications/:stationid/:notificationId")
   .get(getNotificationByNotificationId);
 
+/** ------------------------ [ Booking ] ------------------------------*/
+//Get booking data by station id
+router.route("/booking/:stationid").get(getBookingDataUsingStationId);
+
+//Update Booking Status
+router.route("/booking/:orderid").put(updateBookingStatusByOrderId);
+
+/**-----------------------------[Ratings]---------------------------------- */
+router.route("/ratings/:stationId").get(getAllRatingsByStationId);
+
+/** ------------------------ [ Visualise  ] ------------------------------*/
+router.route("/chart/:userid/getbooking").get(getChartOfBookingDataByUserId);
+router.route("/chart/:userid/getpayment").get(getBookingPaymentDataByUserId);
+router.route("/chart/:userid/getcount").get(getBookingCountsByUserId);
 module.exports = router;

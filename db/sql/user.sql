@@ -27,3 +27,12 @@ CREATE TABLE user_profile (
     INDEX (email),
     FOREIGN KEY (userid) REFERENCES user_registration(userid)
 );
+
+--Reset Password
+CREATE TABLE password_reset_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user_registration(id)
+);
