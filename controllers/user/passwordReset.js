@@ -47,22 +47,36 @@ const storeTokenInDatabase = async (userId, token, expiresAt) => {
   const insertQuery =
     "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)";
   const updateQuery =
-    "UPDATE password_reset_tokens SET token = ?, expires_at = ? WHERE id = ?";
+    "UPDATE password_reset_tokens SET token = ?, expires_at = ? WHERE user_id = ?";
 
   try {
     // Check if a reset token exists for the user
-    const [existingTokenRows] = await pool.query(selectQuery, [userId]);
-    const existingToken = existingTokenRows[0];
+    pool.query(selectQuery, [userId], (error, results) => {
+      if (error) {
+        console.error("Error checking token existence:", error);
+        return;
+      }
 
-    if (existingToken) {
-      // If a reset token exists, update it
-      await pool.query(updateQuery, [token, expiresAt, existingToken.id]);
-      console.log("Token updated in database");
-    } else {
-      // If no reset token exists, insert a new one
-      await pool.query(insertQuery, [userId, token, expiresAt]);
-      console.log("New token stored in database");
-    }
+      if (results.length > 0) {
+        // If a reset token exists, update it
+        pool.query(updateQuery, [token, expiresAt, userId], (updateError) => {
+          if (updateError) {
+            console.error("Error updating token in database:", updateError);
+          } else {
+            console.log("Token updated in database");
+          }
+        });
+      } else {
+        // If no reset token exists, insert a new one
+        pool.query(insertQuery, [userId, token, expiresAt], (insertError) => {
+          if (insertError) {
+            console.error("Error storing new token in database:", insertError);
+          } else {
+            console.log("New token stored in database");
+          }
+        });
+      }
+    });
   } catch (error) {
     console.error("Error storing/updating token in database:", error);
   }

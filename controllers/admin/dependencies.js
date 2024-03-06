@@ -93,6 +93,7 @@ module.exports = {
   pool,
   moment,
   nodemailer,
+  WEB_URL,
   transporter,
   path,
   multer,
