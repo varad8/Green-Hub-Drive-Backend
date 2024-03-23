@@ -88,7 +88,27 @@ const adminRegister = async (req, res) => {
       const insertUserQuery =
         "INSERT INTO ev_registration (email, password, userid) VALUES (?, ?, ?)";
       const insertProfileQuery =
-        "INSERT INTO ev_profile (evid, userid, accountType, accountStatus, profile) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO ev_profile (evid, userid, accountType, accountStatus, profile,location,coordinates,evTimings) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+      const location = {
+        city: "Pune",
+        state: "Maharashtra",
+      };
+
+      const evTimings = {
+        Monday: { openingTime: "08:00", closingTime: "20:00" },
+        Tuesday: { openingTime: "09:00", closingTime: "20:00" },
+        Wednesday: { openingTime: "08:30", closingTime: "20:30" },
+        Thursday: { openingTime: "09:30", closingTime: "20:30" },
+        Friday: { openingTime: "08:00", closingTime: "20:00" },
+        Saturday: { openingTime: "09:00", closingTime: "20:00" },
+        Sunday: { openingTime: "09:00", closingTime: "20:00" },
+      };
+
+      const coordinates = {
+        latitude: 0,
+        longitude: 0,
+      };
 
       // Construct the account status data JSON object
       const accountStatus = {
@@ -129,6 +149,9 @@ const adminRegister = async (req, res) => {
               "EV Admin",
               JSON.stringify(accountStatus),
               JSON.stringify(profileData),
+              JSON.stringify(location),
+              JSON.stringify(coordinates),
+              JSON.stringify(evTimings),
             ],
             (error, results) => {
               if (error) {
@@ -778,13 +801,14 @@ const updateStationDetails = async (req, res) => {
   try {
     // Execute the SQL update query
     await pool.query(
-      "UPDATE ev_profile SET rate = ?, title = ?, description = ?, coordinates = ?, evTimings = ? WHERE userid = ?",
+      "UPDATE ev_profile SET rate = ?, title = ?, description = ?, coordinates = ?, evTimings = ?, location=? WHERE userid = ?",
       [
         rate,
         title,
         description,
         JSON.stringify(coordinates),
         JSON.stringify(evTimings),
+        JSON.stringify(location),
         userid,
       ]
     );

@@ -1,13 +1,13 @@
   <div align="center">
-  <h1 align="center">Green Hub Drive Serve</h1>
-  <h3>Codebase for the Green Hub Drive Serve platform</h3>
+  <h1 align="center">Green Hub Drive Backend + Server</h1>
+  <h3>Codebase for the Green Hub Drive Backend + Server platform</h3>
   <h3>◦ Developed with the software and tools below.</h3>
-  <p align="center"><img src="https://img.shields.io/badge/-Node.js-004E89?logo=Node.js&style=flat-square" alt='Node.js\' />
-<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-Express.js-004E89?logo=Express.js&style=flat-square" alt='Express.js\' />
-<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-MySQL-004E89?logo=MySQL&style=flat-square" alt='MySQL\' />
-<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-dotenv-004E89?logo=dotenv&style=flat-square" alt='dotenv\' />
-<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-bcrypt-004E89?logo=bcrypt&style=flat-square" alt='bcrypt\' />
-<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-moment-004E89?logo=moment&style=flat-square" alt='moment"' />
+  <p align="center"><img src="https://img.shields.io/badge/-Node.js-004E89?logo=Node.js&style=flat" alt='Node.js\' />
+<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-Express.js-004E89?logo=Express.js&style=flat" alt='Express.js\' />
+<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-MySQL-004E89?logo=MySQL&style=flat" alt='MySQL\' />
+<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-EJS-004E89?logo=EJS&style=flat" alt='EJS\' />
+<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-Multer-004E89?logo=Multer&style=flat" alt='Multer\' />
+<img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" /><img src="https://img.shields.io/badge/-Razorpay-004E89?logo=Razorpay&style=flat" alt='Razorpay"' />
 <img src="https://via.placeholder.com/1/0000/00000000" alt="spacer" />
   </p>
   </div>
@@ -26,30 +26,22 @@
   
   ## 🔍 Overview
 
-This is a Node.js project with a RESTful API, using Express.js as the web framework and MongoDB as the database. The project has a modular structure, with separate folders for controllers, routers, and models. The code is well-organized and follows best practices for coding conventions and error handling.
+This is a Node.js project with a comprehensive 1 liner summary of the code. The project involves building an EV charging station management system, with a focus on user authentication, booking, and payment processing. The project uses Express.js for routing, MongoDB for data storage, and React for front-end development. The project also includes a RESTful API for interacting with the backend, as well as a web interface for users to access the system.
 
 ---
 
 ## 🌟 Features
 
-Here is a list of features of the project, based on the information provided:<br>
+Here is a list of features for the project:<br>
 
-- RESTful API using Express.js
-- Modular structure with separate folders for controllers, routers, and models
-- MongoDB as the database
-- Error handling and best practices for coding conventions
-- Support for image uploads
-- Support for WhatsApp notifications
-- Support for booking system
-- Support for payment system
-- Support for admin and superadmin roles
-- Support for user authentication and authorization
-- Support for dependency injection
-- Support for environment variables
-- Support for SQL queries
-- Support for JSON data storage
-- Support for package management using npm
-- Support for continuous integration and deployment using GitHub Actions
+- User authentication (login, logout, registration)
+- Booking system (create, read, update, delete)
+- Payment processing (credit card, PayPal)
+- RESTful API for interacting with the backend
+- Web interface for users to access the system
+- MongoDB for data storage
+- Express.js for routing
+- React for front-end development
 
 ---
 
@@ -57,20 +49,31 @@ Here is a list of features of the project, based on the information provided:<br
 
 ```sh
 ├── .env
+├── city.json
 ├── controllers
 │   ├── admin
 │   │   ├── auth.js
+│   │   ├── booking.js
 │   │   ├── dependencies.js
-│   │   └── notification.js
+│   │   ├── notification.js
+│   │   ├── passwordReset.js
+│   │   ├── rating.js
+│   │   └── reset-password.html
 │   ├── superadmin
-│   │   └── auth.js
+│   │   ├── approve.js
+│   │   ├── auth.js
+│   │   ├── chartData.js
+│   │   └── dependencies.js
 │   └── user
 │       ├── auth.js
 │       ├── booking.js
 │       ├── dependencies.js
 │       ├── imageController.js
 │       ├── notification.js
-│       └── paymentController.js
+│       ├── passwordReset.js
+│       ├── paymentController.js
+│       ├── rating.js
+│       └── reset-password.html
 ├── db
 │   ├── d.json
 │   ├── db.js
@@ -78,6 +81,7 @@ Here is a list of features of the project, based on the information provided:<br
 │       ├── booking.sql
 │       ├── evadmin.sql
 │       ├── notification.sql
+│       ├── rating.sql
 │       ├── superadmin.sql
 │       └── user.sql
 ├── package-lock.json
@@ -89,8 +93,16 @@ Here is a list of features of the project, based on the information provided:<br
 │   └── userRouter.js
 ├── server.js
 └── uploads
-    ├── WhatsApp Image 2024-02-27 at 11.47.54 AM (1)-1709129110097.jpeg
-    └── WhatsApp Image 2024-02-27 at 11.47.54 AM-1709130764121.jpeg
+    ├── 1709900009285_user.png
+    ├── 1709900017107_AdobeStock_585977851.jpg
+    ├── 1709901339652_user.png
+    ├── 1709901673376_evstation.png
+    ├── 1709901687799_editors_images_1665045694755-EV-Station-PluZ-2-660x400@2x.jpg
+    ├── 1709901704658_logo.png
+    ├── 1709901997678_profile.png
+    ├── 1709902026668_pexels-photo-9800006.jpeg
+    ├── 1709902464922_evstation.png
+    └── 1709902487377_Untitled-design-2023-06-21T142313.086.jpg
 
 ```
 
@@ -100,11 +112,14 @@ Here is a list of features of the project, based on the information provided:<br
 
 <details><summary>\controllers\admin</summary>
 
-| File            | Summary                                                                                                                                                                                                                                      |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| auth.js         | The code defines a set of functions for managing EV (Electric Vehicle) admin profiles, including registration, login, profile update, and image upload/download.                                                                             |
-| dependencies.js | The code defines a module that exports various dependencies and functions for use in an Express.js application, including the ability to hash passwords, generate unique EV IDs, check user and EV admin existence, and handle file uploads. |
-| notification.js | The code defines a set of functions for sending, retrieving, updating, and deleting notifications in a database.                                                                                                                             |
+| File             | Summary                                                                                                                                                                                                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| auth.js          | The code defines a set of functions for managing EV station profiles, including registering and logging in EV admins, updating their profiles, and retrieving their profile information. The code also includes functions for uploading and deleting profile pictures, as well as updating the station's image URL. |
+| booking.js       | The code defines a set of functions for managing bookings, including getting booking data by station ID, updating booking status and visiting status, visualizing chart data, getting payment data by user ID, and getting counting data.                                                                           |
+| dependencies.js  | The code defines a module that exports various dependencies and functions for use in an Express.js application, including the ability to hash passwords, generate unique EV IDs, check user and EV admin existence, and send emails using Nodemailer.                                                               |
+| notification.js  | The code defines a set of functions for sending, retrieving, updating, and deleting notifications in a database. The primary function of the code is to provide a set of APIs for managing notifications in a web application.                                                                                      |
+| passwordReset.js | The code defines a set of functions for handling password resets, including generating and sending reset emails, storing and validating reset tokens in a database, and resetting user passwords.                                                                                                                   |
+| rating.js        | The code retrieves ratings for a specific station ID from a database using a connection pool.                                                                                                                                                                                                                       |
 
 </details>
 
@@ -112,9 +127,12 @@ Here is a list of features of the project, based on the information provided:<br
 
 <details><summary>\controllers\superadmin</summary>
 
-| File    | Summary                                                                                                |
-| ------- | ------------------------------------------------------------------------------------------------------ |
-| auth.js | The code defines a route for inserting a new superadmin into the database, using Express.js and MySQL. |
+| File            | Summary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| approve.js      | The code defines two functions: `updateEvAccountStatus` and `disapproveEvAccountStatus`, which are used to update the account status of an EV station in a database. The functions take in request parameters, check if the station and admin exist, fetch the EV station profile details, and then update the account status in the database.                                                                                                                                                 |
+| auth.js         | The code defines a set of functions for managing user profiles, including registering and logging in as a super admin, updating and retrieving profile information, and uploading and retrieving profile images.                                                                                                                                                                                                                                                                               |
+| chartData.js    | The code defines three functions: `getChartOfBookingData`, `getAllBookingPaymentData`, and `getBookingCounts`. The primary function of the code is to provide data for a chart that displays bookings by station and month-year, as well as aggregated data for all bookings with payment details and EV titles. Additionally, the code provides functions to get the number of bookings for today, not visited, and visited, as well as a function to get the month name from a month number. |
+| dependencies.js | The code defines a module that exports various functions and variables related to authentication, including checking the existence of users in different tables, generating unique IDs, and sending emails using Nodemailer.                                                                                                                                                                                                                                                                   |
 
 </details>
 
@@ -122,14 +140,16 @@ Here is a list of features of the project, based on the information provided:<br
 
 <details><summary>\controllers\user</summary>
 
-| File                 | Summary                                                                                                                                                                                                                                                                                                                                                                                       |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| auth.js              | The code defines a set of functions for user registration, login, profile management, and file uploading and downloading.                                                                                                                                                                                                                                                                     |
-| booking.js           | The code defines a function called `checkSlotAvailability` that takes in a request and response object as arguments, and queries a database to retrieve information about EV charging stations and bookings. It then generates time suggestions for each station based on the selected date, slot, and hours, and returns the results in a JSON format.                                       |
-| dependencies.js      | The code defines a module that exports various dependencies and functions for use in an Express.js application, including the ability to check if a user exists in a database, hash passwords using bcrypt, and handle file uploads using multer.                                                                                                                                             |
-| imageController.js   | The code defines a function called `uploadImage` that handles file uploads using the Multer middleware. It sets up storage and limits for the upload, checks the file type, and returns the uploaded image URL.                                                                                                                                                                               |
-| notification.js      | The code defines two functions: `getAllNotification` and `getNotificationByUserId`. The former retrieves all notifications for a given user ID, while the latter retrieves a specific notification by its ID. Both functions use a MySQL database connection pool to execute SQL queries.                                                                                                     |
-| paymentController.js | The code defines a function called `createOrder` that creates an order on the Razorpay payment gateway using the `Razorpay` library. It takes in a request object and a response object, and uses the `razorpayInstance` to create an order with the specified amount, currency, receipt, and other details. If successful, it sends a response with the order ID, amount, and other details. |
+| File                 | Summary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| auth.js              | The code defines a set of functions for user registration, login, profile management, and EV station management. The primary function of the code is to provide a set of APIs for managing user accounts and EV stations, including user registration, login, profile creation and update, and EV station creation and retrieval.                                                                                                                                                                                                                                                                                              |
+| booking.js           | The code is a Node.js module that exports several functions related to checking slot availability and booking data for an electric vehicle (EV) charging station. The primary function of the code is to check if a given slot is available for a specific date, time, and duration based on the operating hours of the station and any existing bookings. Additionally, the code provides functions to get booking data by user ID, station ID, or booking ID, as well as a function to generate time suggestions for a given date, slot, and duration based on the operating hours of the station and any existing bookings. |
+| dependencies.js      | The code defines a set of functions and exports them as an object, with the primary function being to provide a set of utilities for working with Express.js, including database queries, password hashing, email sending, and file uploading.                                                                                                                                                                                                                                                                                                                                                                                 |
+| imageController.js   | The code defines a function called `uploadImage` that takes a request and response object as arguments, and uses the `multer` middleware to handle file uploads. It sets up storage for the uploaded files in the `./uploads/` directory, limits the file size to 1MB, and checks the file type to ensure it is an image (JPEG, JPG, PNG, or GIF). If the file is valid, it returns the URL of the uploaded file in the response.                                                                                                                                                                                              |
+| notification.js      | The code defines three functions: `getAllNotification`, `getNotificationByUserId`, and `sendEmailMessage`. The first two functions are used to retrieve notifications and a specific notification by user ID, respectively. The third function is used to send an email to an administrator with the contact details of a user who has submitted a message through the application.                                                                                                                                                                                                                                            |
+| passwordReset.js     | The code defines a set of functions for handling password resets, including generating and sending reset links, storing and validating reset tokens in a database, and resetting passwords.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| paymentController.js | The code defines a set of functions for creating an order, fetching payments for an order, saving bookings, and sending invoices via email.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| rating.js            | The code defines a set of functions for managing ratings, including saving, updating, and retrieving ratings. The primary function of the code is to provide a set of APIs for interacting with the rating data in a database.                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 </details>
 
@@ -147,11 +167,11 @@ Here is a list of features of the project, based on the information provided:<br
 
 <details><summary>\router</summary>
 
-| File                | Summary                                                                                                                                                                                                                                                                 |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| adminRouter.js      | The code defines an Express.js router for an admin dashboard, with routes for user registration, login, profile management, image uploading, and notification sending.                                                                                                  |
-| superadminRouter.js | The code defines a router for the superadmin functionality, with two routes: one for the home page and another for admin management.                                                                                                                                    |
-| userRouter.js       | The code defines a router for user-related endpoints using Express.js, including routes for user registration, login, profile updates, and image uploading. It also includes routes for checking slot availability, getting notifications, and deleting profile images. |
+| File                | Summary                                                                                                                                                                                                                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| adminRouter.js      | The code defines a router for an Express.js application that handles various administrative tasks, including user registration and login, profile management, image uploading, notification sending, booking management, rating retrieval, and visualization of booking and payment data. |
+| superadminRouter.js | The code defines routes for a superadmin dashboard, including registration, login, profile management, and chart data retrieval.                                                                                                                                                          |
+| userRouter.js       | The code defines a router for an Express.js application that handles various user-related requests, including registration, login, profile management, booking, and payment. It also includes routes for retrieving notifications, ev stations, ratings, and chart data.                  |
 
 </details>
 
@@ -159,9 +179,9 @@ Here is a list of features of the project, based on the information provided:<br
 
 <details><summary>Root</summary>
 
-| File      | Summary                                                                                                                                   |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| server.js | The code sets up an Express.js server, imports routers for user, admin, and superadmin routes, and starts the server on a specified port. |
+| File      | Summary                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------- |
+| server.js | The code defines an Express.js server that serves JSON data from a file and listens on port 3000. |
 
 </details>
 
@@ -169,56 +189,17 @@ Here is a list of features of the project, based on the information provided:<br
 
 ## 🚀 Getting Started
 
-Getting Started with the Project<br>=====================================
+To get started with this project, follow these steps:<br>
 
-This guide will help you get started with the project, including setting up the development environment and running the application.
+1. Install the necessary dependencies by running `npm install` in your terminal.
+2. Create a `.env` file in the root directory of the project and add your environment variables (e.g., database credentials, API keys, etc.).
+3. Start the server by running `npm run dev` or `nodemon server.js`.
+4. Navigate to `http://localhost:3000` in your web browser to access the web interface.
+5. Use the RESTful API endpoints to interact with the backend.
+6. Use the front-end development tools (e.g., React) to build the user interface.
+7. Test the application thoroughly to ensure it is working as expected.
 
-1. Install Node.js and npm
-
----
-
-To run this project, you need to have Node.js and npm installed on your system. You can download the latest version of Node.js from <https://nodejs.org/en/download/>. Once you have downloaded and installed Node.js, open a terminal or command prompt and run the following command to install npm:
-
-```
-npm install -g npm@latest
-```
-
-2. Clone the repository
-
----
-
-Clone the repository using the following command:
-
-```
-git clone https://github.com/<username>/server.git
-```
-
-Replace `<username>` with your GitHub username.
-
-3. Install dependencies
-
----
-
-Navigate to the project directory and run the following command to install the dependencies:
-
-```
-npm install
-```
-
-4. Set up the environment variables
-
----
-
-Create a new file called `.env` in the root directory of the project and add the following lines:
-
-```
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=password
-DB_NAME=database_name
-```
-
-Replace `localhost`, `root`, `password`, and `database_name`
+Note: This guide assumes you have Node.js and npm installed on your system. If you don't have them, you can download them from the official websites.
 
 ---
 

@@ -32,6 +32,7 @@ const {
 const {
   getAllNotification,
   getNotificationByUserId,
+  sendEmailMessage,
 } = require("../controllers/user/notification");
 
 const {
@@ -46,6 +47,7 @@ const {
   getRatingByOrderId,
   saveRating,
   updateRating,
+  getRatingsofStation,
 } = require("../controllers/user/rating");
 
 const router = express.Router();
@@ -115,6 +117,9 @@ router
   .route("/notifications/:userid/:notificationId")
   .get(getNotificationByUserId);
 
+//Send Email Message
+router.route("/contact").post(sendEmailMessage);
+
 /** ------------------------ [ Get  EvStations ] ------------------------------*/
 
 //Get All Evstations
@@ -133,6 +138,7 @@ router.route("/ratings/get/all/:userid").get(getAllRatingsByUserId);
 router.route("/ratings/get/single/:orderid").get(getRatingByOrderId);
 router.route("/ratings/save").post(saveRating);
 router.route("/ratings/updateRating").put(updateRating);
+router.route("/ratings/get/:stationid").get(getRatingsofStation);
 
 /** ------------------------ [ Visualise  ] ------------------------------*/
 router.route("/chart/:userid/getbooking").get(getChartOfBookingDataByUserId);

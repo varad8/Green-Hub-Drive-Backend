@@ -1,4 +1,3 @@
--- Table for superadmin registration
 CREATE TABLE superadmin_registration (
     id INT AUTO_INCREMENT PRIMARY KEY,
     adminId VARCHAR(36) NOT NULL,
@@ -6,13 +5,12 @@ CREATE TABLE superadmin_registration (
     password VARCHAR(255) NOT NULL,
     dateOfCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     createdBy VARCHAR(36),
-    CONSTRAINT fk_created_by FOREIGN KEY (createdBy) REFERENCES superadmin_registration(id)
+    UNIQUE KEY (adminId)
 );
 
--- Table for superadmin profile
 CREATE TABLE superadmin_profile (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    adminId VARCHAR(36) UNIQUE NOT NULL,
+    adminId VARCHAR(36) NOT NULL, 
     firstName VARCHAR(255),
     lastName VARCHAR(255),
     dob DATE,

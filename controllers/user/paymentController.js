@@ -1,4 +1,5 @@
 const {
+  YOUR_EMAIL,
   express,
   bcrypt,
   uuidv4,
@@ -354,7 +355,7 @@ const sendInvoice = async (req, res) => {
 
   // Email options
   const mailOptions = {
-    from: "varadnikharage201@gmail.com",
+    from: YOUR_EMAIL,
     to: bookingData.email,
     subject: "Booking Details",
     html: htmlBody,

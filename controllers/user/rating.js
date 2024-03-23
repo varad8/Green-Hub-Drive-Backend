@@ -211,9 +211,55 @@ const updateRating = async (req, res) => {
   });
 };
 
+const getRatingsofStation = async (req, res) => {
+  const stationid = req.params.stationid;
+
+  if (!stationid) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Error connecting to the database" });
+    }
+
+    connection.query(
+      "SELECT * FROM rating WHERE stationId = ?",
+      [stationid],
+      (error, results) => {
+        connection.release();
+
+        if (error) {
+          return res.status(500).json({ error: "Error querying the database" });
+        }
+
+        if (results.length === 0) {
+          return res
+            .status(404)
+            .json({ error: "No ratings found for the user ID" });
+        }
+
+        // Calculate average rating
+        const totalRatings = results.length;
+        const totalRatingValue = results.reduce(
+          (acc, cur) => acc + cur.rating,
+          0
+        );
+        const averageRating = totalRatingValue / totalRatings;
+
+        // Send the response with the average rating
+        res.status(200).json({ averageRating });
+      }
+    );
+  });
+};
+
 module.exports = {
   getAllRatingsByUserId,
   getRatingByOrderId,
   saveRating,
   updateRating,
+  getRatingsofStation,
 };

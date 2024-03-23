@@ -9,6 +9,7 @@ app.use(express.json());
 const userRouter = require("./router/userRouter");
 const adminRouter = require("./router/adminRouter");
 const superadminRouter = require("./router/superadminRouter");
+const { fs } = require("./controllers/user/dependencies");
 
 app.use(
   cors({
@@ -21,6 +22,21 @@ app.use(
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/superadmin", superadminRouter);
+
+// Define the route to return JSON data
+app.get("/api/cities", (req, res) => {
+  // Read the JSON file
+  fs.readFile("./city.json", "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading JSON file:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+    // Parse the JSON data
+    const cities = JSON.parse(data);
+    // Return the JSON data
+    res.json(cities);
+  });
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;

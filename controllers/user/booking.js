@@ -48,6 +48,12 @@ const checkSlotAvailablity = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
       }
 
+      // Filter stations with accountStatus.status === 'ACTIVE'
+      evStations = evStations.filter((station) => {
+        const accountStatus = JSON.parse(station.accountStatus);
+        return accountStatus?.status === "ACTIVE";
+      });
+
       // Parse JSON strings and convert evTimings format
       evStations = evStations.map((station) => {
         const formattedEvTimings = {};
@@ -192,6 +198,7 @@ function generateTimeSuggestions(
   console.log(evStationProfile, evBookingData, hours, date, slot);
 
   const selectedHours = parseInt(hours, 10);
+  const allTimeSuggestions = []; // Array to accumulate time suggestions for all stations
 
   evStationProfile.forEach((station) => {
     const dayOfWeek = getDateOfWeek(date);
@@ -274,18 +281,124 @@ function generateTimeSuggestions(
 
       currentSlotStart.setHours(currentSlotStart.getHours() + selectedHours);
     }
-    const timeSuggestion = [];
 
-    timeSuggestion.push({
+    allTimeSuggestions.push({
       station: station,
       suggestions: suggestions,
       slot: slot,
       hours: selectedHours,
     });
-
-    res.status(200).json(timeSuggestion);
   });
+
+  // Send the accumulated time suggestions after the loop
+  res.status(200).json(allTimeSuggestions);
 }
+
+// function generateTimeSuggestions(
+//   evStationProfile,
+//   evBookingData,
+//   hours,
+//   date,
+//   slot,
+//   res
+// ) {
+//   console.log(evStationProfile, evBookingData, hours, date, slot);
+
+//   const selectedHours = parseInt(hours, 10);
+
+//   evStationProfile.forEach((station) => {
+//     const dayOfWeek = getDateOfWeek(date);
+
+//     const openingTime = station.evTimings[dayOfWeek].openingTime;
+//     const closingTime = station.evTimings[dayOfWeek].closingTime;
+
+//     const openingDateTime = new Date(date);
+//     openingDateTime.setHours(openingTime.hours, openingTime.minutes, 0, 0);
+
+//     const closingDateTime = new Date(date);
+//     closingDateTime.setHours(closingTime.hours, closingTime.minutes, 0, 0);
+
+//     const stationBookings = evBookingData.filter(
+//       (booking) =>
+//         booking.stationId === station.userid &&
+//         booking.bookedForDate === date &&
+//         booking.bookingSlot === slot
+//     );
+
+//     let currentSlotStart = new Date();
+//     const currentDate = new Date();
+
+//     if (currentDate.toDateString() === openingDateTime.toDateString()) {
+//       const openingDateTimeWithCurrentDate = new Date(currentDate);
+//       openingDateTimeWithCurrentDate.setHours(
+//         openingTime.hours,
+//         openingTime.minutes,
+//         0,
+//         0
+//       );
+
+//       if (currentDate >= openingDateTimeWithCurrentDate) {
+//         currentSlotStart = new Date(currentDate);
+//       } else {
+//         currentSlotStart = new Date(openingDateTimeWithCurrentDate.getTime());
+//       }
+//     } else {
+//       currentSlotStart = new Date(openingDateTime.getTime());
+//     }
+
+//     const suggestions = [];
+
+//     while (currentSlotStart < closingDateTime) {
+//       const currentSlotEnd = new Date(currentSlotStart.getTime());
+//       currentSlotEnd.setHours(currentSlotEnd.getHours() + selectedHours);
+
+//       if (currentSlotEnd > closingDateTime) {
+//         break;
+//       }
+
+//       const overlappingBooking = stationBookings.some((booking) => {
+//         const bookingStart = new Date(
+//           booking.bookedForDate + "T" + booking.timeForBooked
+//         );
+//         const bookingEnd = new Date(bookingStart.getTime());
+//         bookingEnd.setHours(
+//           bookingEnd.getHours() + parseInt(booking.totalHoursEvBooking, 10)
+//         );
+
+//         return (
+//           (currentSlotStart >= bookingStart && currentSlotStart < bookingEnd) ||
+//           (currentSlotEnd > bookingStart && currentSlotEnd <= bookingEnd) ||
+//           (currentSlotStart <= bookingStart && currentSlotEnd >= bookingEnd)
+//         );
+//       });
+
+//       if (!overlappingBooking) {
+//         suggestions.push({
+//           start: currentSlotStart.toLocaleTimeString([], {
+//             hour: "2-digit",
+//             minute: "2-digit",
+//           }),
+//           end: currentSlotEnd.toLocaleTimeString([], {
+//             hour: "2-digit",
+//             minute: "2-digit",
+//           }),
+//         });
+//       }
+
+//       currentSlotStart.setHours(currentSlotStart.getHours() + selectedHours);
+//     }
+//     const timeSuggestion = [];
+
+//     timeSuggestion.push({
+//       station: station,
+//       suggestions: suggestions,
+//       slot: slot,
+//       hours: selectedHours,
+//     });
+
+//     res.status(200).json(timeSuggestion);
+//   });
+// }
 
 //Check slot avialability of according slot,hours,date and time
 const checkSlotAvailabilityForStation = async (req, res) => {
@@ -294,6 +407,8 @@ const checkSlotAvailabilityForStation = async (req, res) => {
 
     // Extracting required data from the request body
     const { date, slot, slothours, time } = req.body;
+
+    console.log("Im Call", date, slot, slothours, time, userId);
 
     if (!userId || !date || !slot || !slothours || !time) {
       return res.status(400).json({ error: "Missing required fields" });
