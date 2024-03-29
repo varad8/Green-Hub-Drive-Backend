@@ -48,6 +48,7 @@ const {
   saveRating,
   updateRating,
   getRatingsofStation,
+  getAllRatings,
 } = require("../controllers/user/rating");
 
 const router = express.Router();
@@ -139,6 +140,7 @@ router.route("/ratings/get/single/:orderid").get(getRatingByOrderId);
 router.route("/ratings/save").post(saveRating);
 router.route("/ratings/updateRating").put(updateRating);
 router.route("/ratings/get/:stationid").get(getRatingsofStation);
+router.route("/ratings/all").get(getAllRatings);
 
 /** ------------------------ [ Visualise  ] ------------------------------*/
 router.route("/chart/:userid/getbooking").get(getChartOfBookingDataByUserId);

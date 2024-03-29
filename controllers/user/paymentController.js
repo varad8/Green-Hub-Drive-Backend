@@ -108,6 +108,7 @@ const fetchPaymentsForOrder = async (req, res) => {
         return res.status(500).json({ error: "Error fetching payments" });
       } else {
         console.log("Payments:", data.items);
+
         // Send the fetched payment data in the response
         return res.status(200).json({ payments: data.items });
       }
@@ -312,15 +313,15 @@ const sendInvoice = async (req, res) => {
     </tr>
     <tr>
         <th style="padding: 8px; text-align: left; background-color: #f2f2f2;">Amount</th>
-        <td style="padding: 8px; text-align: left;">$${bookingData.paymentDetails.amount.toFixed(
+        <td style="padding: 8px; text-align: left;">₹ ${bookingData.paymentDetails.amount.toFixed(
           2
         )}</td>
     </tr>
     <tr>
         <th style="padding: 8px; text-align: left; background-color: #f2f2f2;">Created Date</th>
-        <td style="padding: 8px; text-align: left;">${new Date(
-          bookingData.paymentDetails.createdDate
-        ).toLocaleString()}
+        <td style="padding: 8px; text-align: left;">
+        ${bookingData.paymentDetails.createdDate}
+    
         </td>
     </tr>
 </table>
