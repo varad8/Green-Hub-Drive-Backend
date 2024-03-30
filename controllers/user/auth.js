@@ -77,7 +77,7 @@ const userRegister = async (req, res) => {
       const insertUserQuery =
         "INSERT INTO user_registration (email, password, userid) VALUES (?, ?, ?)";
       const insertProfileQuery =
-        "INSERT INTO user_profile (userid,email) VALUES (?,?)";
+        "INSERT INTO user_profile (userid,email,accountType) VALUES (?,?,?)";
 
       // Insert user registration
       pool.query(
@@ -89,17 +89,21 @@ const userRegister = async (req, res) => {
             return res.status(500).json({ error: "Internal server error" });
           }
 
-          // Insert user profile with only userid and email
-          pool.query(insertProfileQuery, [userid, email], (error, results) => {
-            if (error) {
-              console.error("Error creating user profile:", error);
-              return res.status(500).json({ error: "Internal server error" });
+          // Insert user profile with only userid and e mail
+          pool.query(
+            insertProfileQuery,
+            [userid, email, "user"],
+            (error, results) => {
+              if (error) {
+                console.error("Error creating user profile:", error);
+                return res.status(500).json({ error: "Internal server error" });
+              }
+              res.status(201).json({
+                message: "User registered successfully",
+                userid,
+              });
             }
-            res.status(201).json({
-              message: "User registered successfully",
-              userid,
-            });
-          });
+          );
         }
       );
     });
